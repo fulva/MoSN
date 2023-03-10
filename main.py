@@ -7,30 +7,31 @@ from models import initialize_model
 from train import train
 random.seed(10)
 
-parser = argparse.ArgumentParser(description='SelfSVT Training')
+parser = argparse.ArgumentParser(description='MoSN Training')
 
 parser.add_argument('--m', default=0.999, type=float, help='The momentum update factor.')
 parser.add_argument('--w-size', default=32, type=int, help='The size of the input image.')
 parser.add_argument('--num', default=8, type=int, help='The number of switches.')
 parser.add_argument('--seen', default=30, type=int, help='The proportion of different states included in training.')
-parser.add_argument('--scene', default='RE', type=str, help='The name of the environment.')
+parser.add_argument('--scene', default='SE-FA', type=str, help='The name of the environment.')
 
 
 def main():
     args = parser.parse_args()
+    print(args)
 
     device = th.device("cuda" if th.cuda.is_available() else "cpu")
     print("----------"+str(device) + " will be used to do the computation"+"----------")
 
     dirpath = os.path.join(os.path.join(os.getcwd(), "data/"), args.scene)
 
-    if (args.scene == "SE")|(args.scene == "RE"):
+    if args.scene == "SE-FA":
         data_dict = np.load(os.path.join(dirpath, args.scene+"_all_images_N"+str(args.num)+"_Size"+str(args.w_size)+".npy"), allow_pickle=True).item()
         data = []
         for key, value in data_dict.items():
             data.append((key, value))
         del data_dict
-    elif scene == "RE1":
+    elif (scene == "DE-FA") | (scene == "SE-DA") | (scene == "DE-DA") :
         data_dict = np.load(os.path.join(dirpath, args.scene+"_all_images_N"+str(args.num)+"_Size"+str(args.w_size)+".npy"), allow_pickle=True).item()
     else:
         print("Scene: "+scene+" is not exist.")
